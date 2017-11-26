@@ -1,4 +1,5 @@
 import serial
+import StoPy
 
 ser = serial.Serial('/dev/ttyUSB0', 9600)
 
@@ -13,4 +14,4 @@ while True:
 
 
 ser.close()
-https://create.arduino.cc/projecthub/Aritro/smoke-detection-using-mq-2-gas-sensor-79c54a
+#https://create.arduino.cc/projecthub/Aritro/smoke-detection-using-mq-2-gas-sensor-79c54a

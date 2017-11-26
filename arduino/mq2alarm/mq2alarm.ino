@@ -1,5 +1,8 @@
 
 #include <EEPROM.h>
+#include <ArduinoJson.h>
+const int serialPort = 9600
+
 const int gasPin = A0; //GAS sensor output pin to Arduino analog A0 pin
 const int buzzer = 10;
 const int threshold = 250;
@@ -10,7 +13,7 @@ const int greenPin = 12;
 
 void setup()
 {
-	Serial.begin(9600); //Initialize serial port - 9600 bps
+	Serial.begin(serialPort); //Initialize serial port - 9600 bps
         pinMode(redPin, OUTPUT);
         pinMode(greenPin, OUTPUT);
 }
