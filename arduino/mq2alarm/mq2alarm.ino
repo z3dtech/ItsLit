@@ -1,10 +1,11 @@
 #include <EEPROM.h>
 #include <ArduinoJson.h>
 const int serialPort = 9600;
-StaticJsonBuffer<1023> jsonBuffer;
+StaticJsonBuffer<255> jsonBuffer;
 
 JsonObject& reading  = jsonBuffer.createObject();
-      int alarmLocal = 0;
+int alarmLocal = 0;
+int printAlternating = 0;
 
 const int gasPin = A0; //GAS sensor output pin to Arduino analog A0 pin
 const int buzzer = 10;
@@ -12,6 +13,7 @@ const int threshold = 250;
 
 const int redPin = 13;
 const int greenPin = 12;
+const int bluePin = 11;
 
 const int smokeThreshold = 50;
 const int COThreshold = 100;
@@ -58,46 +60,28 @@ void setup()
   Serial.begin(serialPort); //Initialize serial port - 9600 bps
   pinMode(redPin, OUTPUT);
   pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+  analogWrite(bluePin, 255);
+
   Serial.begin(9600);                               //UART setup, baudrate = 9600bps
-  Serial.print("Calibrating...\n");                
   originalResistance = MQCalibration(MQ_PIN);                       //Calibrating the sensor. Please make sure the sensor is in clean air                                                   //when you perform the calibration                    
-  Serial.print("Calibration is done...\n"); 
-  Serial.print("originalResistance=");
-  Serial.print(originalResistance);
-  Serial.print("kohm");
-  Serial.print("\n");
+  turnOffLight();
 
 }
 
 void loop()
 {
-  //Serial.println(EEPROM.read(0));
-  /*
-      int reading = analogRead(gasPin);
-   	Serial.println(reading);
-   if( reading > threshold ) {
-   //Serial.println("alarm!");
-   redLight();
-   tone(buzzer, 1000, 500);
-   } else {
-   greenLight();
-   noTone(buzzer);
-   } 
-   	delay(500); // Print value every 1 sec.
-   turnOffLight();
-   delay(500);
-   */
   int resistanceReading = MQRead(MQ_PIN);
-
-  //reading["time"] = time();
   reading["alarm_id"] = EEPROM.read(0);
   reading["sensor"] = resistanceReading;
   reading["flammableGas"] = MQGetGasPercentage(resistanceReading/originalResistance,GAS_LPG);
   reading["carbonMonoxide"] = MQGetGasPercentage(resistanceReading/originalResistance,GAS_CO);
   reading["smoke"] = MQGetGasPercentage(resistanceReading/originalResistance,GAS_CO);
   parseAlarm();
+  reading["readingCount"] = printAlternating;
   reading.printTo(Serial);
   Serial.print("\n");
+ 
   boolean alarmRemote = false;
   if( reading["alarm"] != 0 ) {
     redLight();
@@ -128,6 +112,7 @@ void greenLight(){
 void turnOffLight(){
   analogWrite(greenPin, 0);
   analogWrite(redPin, 0);
+  analogWrite(bluePin, 0);
 }
 
 void parseAlarm( ) {
@@ -144,9 +129,6 @@ void parseAlarm( ) {
     alarmLocal = 3;
   }  
   reading["alarm"] = alarmLocal; 
-  if( alarmLocal > 0 ) {
-   
-  }
 }
 
 
