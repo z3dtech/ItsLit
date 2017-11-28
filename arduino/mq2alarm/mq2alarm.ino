@@ -96,6 +96,17 @@ void loop()
   */
   delay( 500 );
   turnOffLight();
+  String readString = "";
+  while (Serial.available()) {
+    if (Serial.available() >0) {
+      char c = Serial.read();  //gets one byte from serial buffer
+      readString += c; //makes the string readString
+    }
+  }
+  if( readString.length() > 0) {
+    redLight();
+    tone(buzzer, 500, 500);
+  } 
   delay(500);
 }
 
