@@ -5,7 +5,6 @@ StaticJsonBuffer<255> jsonBuffer;
 
 JsonObject& reading  = jsonBuffer.createObject();
 int alarmLocal = 0;
-int printAlternating = 0;
 
 const int gasPin = A0; //GAS sensor output pin to Arduino analog A0 pin
 const int buzzer = 10;
@@ -61,7 +60,7 @@ void setup()
   pinMode(redPin, OUTPUT);
   pinMode(greenPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
-  analogWrite(bluePin, 255);
+  analogWrite(bluePin, 56);
 
   Serial.begin(9600);                               //UART setup, baudrate = 9600bps
   originalResistance = MQCalibration(MQ_PIN);                       //Calibrating the sensor. Please make sure the sensor is in clean air                                                   //when you perform the calibration                    
@@ -78,7 +77,6 @@ void loop()
   reading["carbonMonoxide"] = MQGetGasPercentage(resistanceReading/originalResistance,GAS_CO);
   reading["smoke"] = MQGetGasPercentage(resistanceReading/originalResistance,GAS_CO);
   parseAlarm();
-  reading["readingCount"] = printAlternating;
   reading.printTo(Serial);
   Serial.print("\n");
  
@@ -106,7 +104,7 @@ void redLight() {
 }
 
 void greenLight(){
-  analogWrite(greenPin, 255);
+  analogWrite(greenPin, 128);
 }
 
 void turnOffLight(){

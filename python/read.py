@@ -1,7 +1,8 @@
 import serial
 import serial.tools.list_ports
 import json
-import time
+from time import sleep
+from time import time
 from StoPy import StoPy
 from multiprocessing import Pool
 
@@ -37,19 +38,21 @@ def getArduinoPorts():
 # this function listens to an individual arduino
 
 def parseInput( arduino, listen=9600 ):
-	print( "attempting to read arduino" )
+	print( "re-calibrating arduino" )
 	print(arduino)
 	upload = { 'collection': getPiId(), 'owner': arduino['arduino_id'] }
 	i = 0
 	except_counter = 0
 	port = arduino['port']
 	ser = serial.Serial( port, listen, timeout=15 )
-	while i < 4:
+	while i < 10:
 		try: 
 			lines = ser.read(255).split("\n")
 			#print( lines[len(lines)-2] )
 			upload['data'] = json.loads( lines[len(lines)-2] )
+			upload['data']['time'] = int(time())
 			print( upload )
+			print( sto.insert(upload['collection'], upload['owner'], upload['data']) )
 			i += 1
 		except ValueError:  # includes simplejson.decoder.JSONDecodeError
 			print 'Decoding JSON has failed'
@@ -57,32 +60,30 @@ def parseInput( arduino, listen=9600 ):
 			if except_counter == 10:
 				break
 		except serial.serialutil.SerialException:
-			print 'Serial Issue'
+			print 'Serial Issue - Read'
 			except_counter +=1
-			if except_counter == 5:
+			if except_counter == 4:
 				break
-		except IOError:
-			print 'Disconnected from USB'
+			sleep(15)
+	try:
+		ser.flushInput()
+		ser.close()
+	except serial.serialutil.SerialException:
+			print 'Serial Issue - Flush'
 			except_counter +=1
-			if except_counter == 5:
-				break
-			sleep(20)
-
-	ser.flushInput()
-	ser.close()
+			if except_counter == 4:
+				return False
+			sleep(15)
 	return True
 
-arduinos_list = getArduinoPorts()
 except_counter = 0
+arduinos_list = getArduinoPorts()
 
 while True: 
 	try: # listen to each arduino
+		arduinos_list = getArduinoPorts()
 		map( parseInput, arduinos_list ) #currently round robins on 30 second rotations
 		#should find a way to async multiprocess 
 		#pool().map_async wasn't working =_=
-	except serial.serialutil.SerialException:
-	    except_counter +=1
-	    if except_counter == 5:
-	       break
 	except KeyboardInterrupt:
 		break
