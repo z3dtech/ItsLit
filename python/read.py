@@ -1,13 +1,13 @@
 import serial
 import serial.tools.list_ports
 import json
+import threading
+import sys
 from time import sleep
 from time import time
 from StoPy import StoPy
-from multiprocessing import Pool
 
-sto = StoPy.StoPy( "localhost", "8080", "cbab68f9e00f1ffc58f198e042064d54" ) 
-arduino_alarms = {"otherAlarm": True}
+arduino_alarms = {} # global list of alarms and their active status 
 
 def getPiId(): # this function generates an ID for the Pi MCU
   cpuserial = "0000000000000000"
@@ -34,9 +34,9 @@ def getArduinoPorts(): # this function scans all USB ports for arduino connectio
 	return arduinos
 
 
-def parseInput( arduino, listen=9600 ): # this function interfaces with an individual arduino
+def parseInput( arduino, sto, listen=9600 ): # this function interfaces with an individual arduino
 	print( "re-calibrating arduino connection" )
-	print(arduino)
+	print( arduino )
 	upload = { 'collection': getPiId(), 'owner': arduino['arduino_id'] } # prepare for request
 	i = 0
 	except_counter = 0 #reset exception counter per individual calibration
@@ -61,11 +61,13 @@ def parseInput( arduino, listen=9600 ): # this function interfaces with an indiv
 				i += 1 #iterate count
 			except ValueError:  # includes simplejson.decoder.JSONDecodeError
 				print 'Decoding JSON has failed'
+				arduino_alarms[ arduino['arduino_id'] ] = False # stop remote triggers on bad read
 				except_counter +=1
 				if except_counter == 10:
 					break
 			except serial.serialutil.SerialException: #handle serial disconnect/failure
 				print 'Serial Issue - Read'
+				arduino_alarms[ arduino['arduino_id'] ] = False # stop remote triggers on disconnect
 				except_counter +=1
 				if except_counter == 4:
 					break
@@ -82,13 +84,20 @@ def parseInput( arduino, listen=9600 ): # this function interfaces with an indiv
 	return True
 
 except_counter = 0
-arduinos_list = getArduinoPorts()
-
-while True: 
-	try: # listen to each arduino
-		arduinos_list = getArduinoPorts()
-		map( parseInput, arduinos_list ) #currently round robins on 30 second rotations
-		#should find a way to async multiprocess 
-		#pool().map_async wasn't working =_=
-	except KeyboardInterrupt:
-		break
+sto = StoPy.StoPy( "localhost", "8080", "cbab68f9e00f1ffc58f198e042064d54" ) # API wrapepr object
+		
+try: # listen to each arduino
+	arduinos_list = getArduinoPorts()
+	threads = []
+	if len(arduinos_list) < 128:
+		for i, arduino in enumerate(arduinos_list):
+			print( "thread "+str(i+1)+" of "+str(len(arduinos_list)) )
+			t = threading.Thread(target=parseInput, args=(arduino,sto))
+			threads.append(t)
+			t.start()
+			while True: sleep(60)
+except (KeyboardInterrupt, SystemExit):
+	print( "Process Ended" )
+	for t in threads:
+		t.cancel()
+	sys.exit()
