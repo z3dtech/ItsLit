@@ -1,0 +1,1 @@
+{"version":3,"sources":["framework7-react/PageContent.ts"],"names":[],"mappings":";;AACA,4DAAyD;AACzD,mEAAgE;AAYnD,QAAA,WAAW,GAAG,6BAAa,CAAoB;IAC3D,SAAS,EAAE,+BAAc;IACzB,IAAI,EAAE,aAAa;IACnB,GAAG,EAAE,iBAAiB;IACtB,MAAM,EAAE;QACP,UAAU;QACV,UAAU;KACV;CACD,CAAC,CAAC","file":"PageContent.js","sourceRoot":"../../.."}

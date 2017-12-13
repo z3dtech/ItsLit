@@ -1,0 +1,1 @@
+{"version":3,"sources":["framework7-react/FormSwitch.ts"],"names":[],"mappings":";;AACA,4DAAyD;AACzD,mEAA+D;AAoBlD,QAAA,UAAU,GAAG,6BAAa,CAAmB;IACzD,SAAS,EAAE,8BAAa;IACxB,IAAI,EAAE,YAAY;IAClB,GAAG,EAAE,WAAW;IAChB,MAAM,EAAE;QACP,OAAO;QACP,QAAQ;QACR,OAAO;KACP;CACD,CAAC,CAAC","file":"FormSwitch.js","sourceRoot":"../../.."}

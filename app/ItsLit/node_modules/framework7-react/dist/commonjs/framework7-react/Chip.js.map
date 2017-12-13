@@ -1,0 +1,1 @@
+{"version":3,"sources":["framework7-react/Chip.ts"],"names":[],"mappings":";;AACA,4DAAyD;AACzD,mEAAyD;AAiB5C,QAAA,IAAI,GAAG,6BAAa,CAAa;IAC7C,SAAS,EAAE,wBAAO;IAClB,IAAI,EAAE,MAAM;IACZ,GAAG,EAAE,SAAS;IACd,MAAM,EAAE;QACP,OAAO;QACP,QAAQ;KACR;CACD,CAAC,CAAC","file":"Chip.js","sourceRoot":"../../.."}

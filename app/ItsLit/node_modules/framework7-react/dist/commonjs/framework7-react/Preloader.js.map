@@ -1,0 +1,1 @@
+{"version":3,"sources":["framework7-react/Preloader.ts"],"names":[],"mappings":";;AACA,4DAAyD;AACzD,mEAA8D;AAUjD,QAAA,SAAS,GAAG,6BAAa,CAAkB;IACvD,SAAS,EAAE,6BAAY;IACvB,IAAI,EAAE,WAAW;IACjB,GAAG,EAAE,cAAc;CACnB,CAAC,CAAC","file":"Preloader.js","sourceRoot":"../../.."}

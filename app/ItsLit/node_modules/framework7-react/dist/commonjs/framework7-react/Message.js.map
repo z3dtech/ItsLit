@@ -1,0 +1,1 @@
+{"version":3,"sources":["framework7-react/Message.ts"],"names":[],"mappings":";;AACA,4DAAyD;AACzD,mEAA4D;AAwB/C,QAAA,OAAO,GAAG,6BAAa,CAAgB;IACnD,SAAS,EAAE,2BAAU;IACrB,IAAI,EAAE,SAAS;IACf,GAAG,EAAE,YAAY;IACjB,MAAM,EAAE;QACP,OAAO;QACP,YAAY;QACZ,YAAY;QACZ,cAAc;KACd;IACD,KAAK,EAAE;QACN,OAAO;QACP,KAAK;KACL;CACD,CAAC,CAAC","file":"Message.js","sourceRoot":"../../.."}

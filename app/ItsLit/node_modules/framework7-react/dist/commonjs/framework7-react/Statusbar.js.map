@@ -1,0 +1,1 @@
+{"version":3,"sources":["framework7-react/Statusbar.ts"],"names":[],"mappings":";;AACA,4DAAyD;AACzD,mEAA8D;AASjD,QAAA,SAAS,GAAG,6BAAa,CAAkB;IACvD,SAAS,EAAE,6BAAY;IACvB,IAAI,EAAE,WAAW;IACjB,GAAG,EAAE,WAAW;CAChB,CAAC,CAAC","file":"Statusbar.js","sourceRoot":"../../.."}

@@ -1,0 +1,1 @@
+{"version":3,"sources":["framework7-react/ActionsLabel.ts"],"names":[],"mappings":";;AACA,4DAAyD;AACzD,mEAAiE;AAWpD,QAAA,YAAY,GAAG,6BAAa,CAAqB;IAC7D,SAAS,EAAE,gCAAe;IAC1B,IAAI,EAAE,cAAc;IACpB,GAAG,EAAE,kBAAkB;IACvB,MAAM,EAAE;QACP,OAAO;KACP;CACD,CAAC,CAAC","file":"ActionsLabel.js","sourceRoot":"../../.."}

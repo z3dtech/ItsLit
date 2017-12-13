@@ -1,0 +1,1 @@
+{"version":3,"sources":["framework7-react/Badge.ts"],"names":[],"mappings":";;AACA,4DAAyD;AACzD,mEAA0D;AAS7C,QAAA,KAAK,GAAG,6BAAa,CAAc;IAC/C,SAAS,EAAE,yBAAQ;IACnB,IAAI,EAAE,OAAO;IACb,GAAG,EAAE,UAAU;CACf,CAAC,CAAC","file":"Badge.js","sourceRoot":"../../.."}

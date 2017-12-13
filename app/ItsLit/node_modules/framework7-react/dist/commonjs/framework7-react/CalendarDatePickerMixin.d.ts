@@ -1,0 +1,40 @@
+export interface ICalendarDatePickerMixinProps {
+    value?: string | any[] | number;
+    monthNames?: any[];
+    monthNamesShort?: any[];
+    dayNames?: any[];
+    dayNamesShort?: any[];
+    firstDay?: number;
+    weekendDays?: any[];
+    multiple?: boolean;
+    rangePicker?: boolean;
+    dateFormat?: string;
+    direction?: string;
+    minDate?: string | string | number;
+    maxDate?: string | string | number;
+    disabled?: any[] | Function | Object;
+    events?: any[] | Function | Object;
+    rangesClasses?: any[] | Function | Object;
+    touchMove?: boolean;
+    animate?: boolean;
+    closeOnSelect?: boolean;
+    monthPicker?: boolean;
+    yearPicker?: boolean;
+    weekHeader?: boolean;
+    closeByOutsideClick?: boolean;
+    scrollToInput?: boolean;
+    inputReadOnly?: boolean;
+    convertToPopover?: boolean;
+    onlyInPopover?: boolean;
+    toolbar?: boolean;
+    toolbarTemplate?: string;
+    toolbarCloseText?: string;
+    headerPlaceholder?: string;
+    header?: boolean;
+    footer?: boolean;
+    id?: string;
+    className?: string;
+    style?: {
+        [cssAttribute: string]: string;
+    };
+}
