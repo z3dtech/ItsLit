@@ -84,7 +84,8 @@ def parseInput( arduino, sto, listen=9600 ): # this function interfaces with an 
 	return True
 
 except_counter = 0
-sto = StoPy.StoPy( "localhost", "8080", "cbab68f9e00f1ffc58f198e042064d54" ) # API wrapepr object
+secret = json.loads( open( './secret.json', 'r' ).read() )
+sto = StoPy.StoPy( secret['url'], secret['port'], secret['api_key'] ) # API wrapepr object
 		
 try: # listen to each arduino
 	arduinos_list = getArduinoPorts()
