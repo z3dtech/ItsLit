@@ -8,6 +8,8 @@ from time import time
 from StoPy import StoPy
 
 arduino_alarms = {} # global list of alarms and their active status 
+secret = json.loads( open( './secret.json', 'r' ).read() )
+sto = StoPy.StoPy( secret['url'], secret['port'], secret['api_key'] ) # API wrapepr object
 
 def getPiId(): # this function generates an ID for the Pi MCU
 	cpuserial = "0000000000000000"
@@ -32,9 +34,11 @@ def getArduinoPorts(): # this function scans all USB ports for arduino connectio
 	return arduinos
 
 
-def parseInput( arduino, sto, listen=9600 ): # this function interfaces with an individual arduino
+def parseInput( arduino ): # this function interfaces with an individual arduino
 	print( "re-calibrating arduino connection" )
 	print( arduino )
+	print( arduino['arduino_id'] )
+	listen = 9600
 	upload = { 'collection': getPiId(), 'owner': arduino['arduino_id'] } # prepare for request
 	i = 0
 	except_counter = 0 #reset exception counter per individual calibration
@@ -81,20 +85,15 @@ def parseInput( arduino, sto, listen=9600 ): # this function interfaces with an 
 			sleep(15)
 	return True
 
-except_counter = 0
-secret = json.loads( open( './secret.json', 'r' ).read() )
-sto = StoPy.StoPy( secret['url'], secret['port'], secret['api_key'] ) # API wrapepr object
-		
+except_counter = 0		
 try: # listen to each arduino
 	arduinos_list = getArduinoPorts()
 	threads = []
+	p = multiprocessing.Pool(len(arduinos_list))
 	if len(arduinos_list) < 128:
-		for i, arduino in enumerate(arduinos_list):
-			print( "thread "+str(i+1)+" of "+str(len(arduinos_list)) )
-			t = multiprocessing.Process(target=parseInput, args=(arduino,sto))
-			threads.append(t)
-			t.start()
-			while True: sleep(60)
+		while True:
+			p.map_async( parseInput, arduinos_list )
+			sleep(60)
 except (KeyboardInterrupt, SystemExit):
 	print( "Process Ended" )
 	for t in threads:
