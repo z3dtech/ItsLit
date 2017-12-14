@@ -95,7 +95,6 @@ void loop()
   }
   */
   delay( 500 );
-  turnOffLight();
   String readString = "";
   while (Serial.available()) {
     if (Serial.available() >0) {
@@ -104,6 +103,8 @@ void loop()
     }
   }
   if( readString.length() > 0) {
+    
+    turnOffLight();
     redLight();
     tone(buzzer, 500, 500);
   } 
