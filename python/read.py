@@ -1,7 +1,7 @@
 import serial
 import serial.tools.list_ports
 import json
-import threading
+import multiprocessing
 import sys
 from time import sleep
 from time import time
@@ -10,18 +10,16 @@ from StoPy import StoPy
 arduino_alarms = {} # global list of alarms and their active status 
 
 def getPiId(): # this function generates an ID for the Pi MCU
-  cpuserial = "0000000000000000"
-  try:
-    f = open('/proc/cpuinfo','r')
-    for line in f:
-      if line[0:6]=='Serial':
-        cpuserial = line[10:26]
-    f.close()
-  except:
-    cpuserial = "ERROR000000000"
-  return "MCU-" + cpuserial
-
-
+	cpuserial = "0000000000000000"
+	try:
+		f = open('/proc/cpuinfo','r')
+		for line in f:
+			if line[0:6]=='Serial':
+				cpuserial = line[10:26]
+		f.close()
+	except:
+		cpuserial = "ERROR000000000"	
+	return "MCU-" + cpuserial
 
 
 def getArduinoPorts(): # this function scans all USB ports for arduino connections and stores them
@@ -49,7 +47,7 @@ def parseInput( arduino, sto, listen=9600 ): # this function interfaces with an 
 				upload['data'] = json.loads( lines[len(lines)-2] ) #parse data
 				upload['data']['time'] = int(time()) #addd time
 				print( upload ) #check format
-			#	print( sto.insert(upload['collection'], upload['owner'], upload['data']) ) #save/upload data
+				print( sto.insert(upload['collection'], upload['owner'], upload['data']) ) #save/upload data
 				# send our data up to fog triggers
 				if int( upload['data']['alarm'] ) > 0:
 					arduino_alarms[ arduino['arduino_id'] ] = True
@@ -93,12 +91,12 @@ try: # listen to each arduino
 	if len(arduinos_list) < 128:
 		for i, arduino in enumerate(arduinos_list):
 			print( "thread "+str(i+1)+" of "+str(len(arduinos_list)) )
-			t = threading.Thread(target=parseInput, args=(arduino,sto))
+			t = multiprocessing.Process(target=parseInput, args=(arduino,sto))
 			threads.append(t)
 			t.start()
 			while True: sleep(60)
 except (KeyboardInterrupt, SystemExit):
 	print( "Process Ended" )
 	for t in threads:
-		t.cancel()
+		t.terminate()
 	sys.exit()
