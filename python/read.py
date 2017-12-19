@@ -31,13 +31,13 @@ def getArduinoPorts(): # this function scans all USB ports for arduino connectio
 	for p in ports:
 	    if any( s in p.description for s in arduino_labels ):
 	    	arduinos.append( {'port': p[0], 'arduino_id': p.serial_number } )
+	    	arduino_alarms[ p.serial_number ] = False
 	return arduinos
 
 
 def parseInput( arduino ): # this function interfaces with an individual arduino
 	print( "re-calibrating arduino connection" )
 	print( arduino )
-	print( arduino['arduino_id'] )
 	listen = 9600
 	upload = { 'collection': getPiId(), 'owner': arduino['arduino_id'] } # prepare for request
 	i = 0
@@ -45,20 +45,25 @@ def parseInput( arduino ): # this function interfaces with an individual arduino
 	port = arduino['port']
 	try:
 		ser = serial.Serial( port, listen, timeout=15 ) #open
-		while i < 10: #10 reads per calibration
+		while i < 40: #10 reads per calibration
 			try: 
 				lines = ser.read(255).split("\n") #read data
 				upload['data'] = json.loads( lines[len(lines)-2] ) #parse data
 				upload['data']['time'] = int(time()) #addd time
 				print( upload ) #check format
-				print( sto.insert(upload['collection'], upload['owner'], upload['data']) ) #save/upload data
+				#print( sto.insert(upload['collection'], upload['owner'], upload['data']) ) #save/upload data
+				#alarm_data = dict( JSON.dump( upload['data'] ) )
+
 				# send our data up to fog triggers
 				if int( upload['data']['alarm'] ) > 0:
 					arduino_alarms[ arduino['arduino_id'] ] = True
 				else:
 					arduino_alarms[ arduino['arduino_id'] ] = False
+				
+				#print( 'Alarm Level ' + alarm_data['alarm'] )
+				print( arduino_alarms )
 				#handle external fog triggers
-				if arduino_alarms[ arduino['arduino_id'] ] == False and any( active for active in arduino_alarms.values() ):
+				if arduino_alarms[ arduino['arduino_id'] ] == False and any( active == True for active in arduino_alarms.values() ):
 					ser.write("REMOTE ALARM TRIGGER")
 				i += 1 #iterate count
 			except ValueError:  # includes simplejson.decoder.JSONDecodeError
@@ -88,7 +93,6 @@ def parseInput( arduino ): # this function interfaces with an individual arduino
 except_counter = 0		
 try: # listen to each arduino
 	arduinos_list = getArduinoPorts()
-	threads = []
 	p = multiprocessing.Pool(len(arduinos_list))
 	if len(arduinos_list) < 128:
 		while True:
@@ -96,6 +100,5 @@ try: # listen to each arduino
 			sleep(60)
 except (KeyboardInterrupt, SystemExit):
 	print( "Process Ended" )
-	for t in threads:
-		t.terminate()
+	p.terminate()
 	sys.exit()
