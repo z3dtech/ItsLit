@@ -1,6 +1,4 @@
-# Arduino
-
-### What to Expect
+# Arduino Documentation
 
 This Arduino Project is written to take in readings of air quality according to the circuit design, and output them to the serial in JSON form where they are read by the corresponding python listener/reader script. Additionally, if any input to the circuit is sent via serial, it will also set off an alarm. This is to replicate a foggy layer signal issuance (where one alarm triggering should set off all the alarms). 
 
