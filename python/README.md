@@ -9,9 +9,8 @@ The included code (read.py ) performs the following functions:
 
 ### Setup
 
-Add a secret.json file that details the address of your sto api, the port, and the API key you are using to write data. See [example.secret.json](./example.secret.json). 
-One could potentially install the sto API on localhost and simply add 127.0.0.1 to the secret.json if your Pi has reasonable storage capacity. 
-The script currently generates approximately 30-50MB of data per year per sensor.
+Add a secret.json file that details the address of your sto api, the port, and the API key you are using to write data. See [secret.example.json](./secret.example.json). 
+One could potentially install the sto API on localhost and simply add 127.0.0.1 to the secret.json if the connected Pi has a reasonable storage capacity. The script currently generates an estimated 30-50MB of data per year per sensor, but one could lower the frequency of reads to reduce data consumption.
 
 ### Issues
 
