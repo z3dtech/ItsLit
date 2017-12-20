@@ -14,6 +14,6 @@ One could potentially install the sto API on localhost and simply add 127.0.0.1 
 
 ### Issues
 
-* Sudden disconnects aren't handled well
-* The script continuously recalibrates every 10 to 50 reads which will allow 
-* There is no build/continuous run functionality built in. It must be maintained and monitored on server side.
+* Sudden hardware disconnects aren't handled well
+* The script continuously recalibrates the sensors every 10 to 50 reads which will allow bad air to reset the alarm standards on the MQ2.
+* There is no build/continuous run functionality built-in to the script. It must be maintained and monitored on SBC somehow.
