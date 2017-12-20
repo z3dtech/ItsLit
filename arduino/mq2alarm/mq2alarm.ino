@@ -82,18 +82,14 @@ void loop()
  
   boolean alarmRemote = false;
   if( reading["alarm"] != 0 ) {
+    turnOffLight();
     redLight();
     tone(buzzer, 1000, 500);
   } else {
+    turnOffLight();
     greenLight();
     noTone(buzzer);
   } 
-  /*
-  else if( alarmRemote ) {
-    redLight();
-    tone(buzzer, 500, 500);
-  }
-  */
   delay( 500 );
   String readString = "";
   while (Serial.available()) {
@@ -103,7 +99,6 @@ void loop()
     }
   }
   if( readString.length() > 0) {
-    
     turnOffLight();
     redLight();
     tone(buzzer, 500, 500);

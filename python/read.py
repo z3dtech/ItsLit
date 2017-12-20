@@ -93,6 +93,7 @@ def parseInput( arduino ): # this function interfaces with an individual arduino
 except_counter = 0		
 try: # listen to each arduino
 	arduinos_list = getArduinoPorts()
+	print( sto.insert( 'sensors', getPiId(), { 'sensors': arduinos_list } ) ) #save/upload data
 	p = multiprocessing.Pool(len(arduinos_list))
 	if len(arduinos_list) < 128:
 		while True:
