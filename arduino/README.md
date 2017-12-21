@@ -10,14 +10,18 @@ You can follow the following diagram:
 
 Please note, the MQ2 sensor illustration is a little wonky because it is a custom sensor not included in Fritzing. Essentially, check the labels and VCC connects to power, GND connects to ground, and A0 connects to the board input pin.
 
+### MQ-2 Sensors
+
+MQ sensors are a series of plug-and-play gas sensors with heating components and variable resistance that is relays interferance due to specific gas particles. The MQ-2 sensor specifically detects smoke particles, carbon monoxide, and some  flammable gases (including butane). I bought mine [here](https://www.amazon.com/Sensor-Module-Methane-Detection-Arduino/dp/B01MEHLVVT) and it works pretty OK.
+
 ### Hardware Requirements
 
 * Arduino Uno or Sparkfun Redboard
 * Solderless Breadboard
-* 1 MQ2 Smoke Sensor [purchase here](https://www.amazon.com/Sensor-Module-Methane-Detection-Arduino/dp/B01MEHLVVT)
+* 1 MQ2 Smoke Sensor
 * 1 RGB LED (usually included in a kit)
 * 1 Piezo Speaker (usually included in kits)
-* 12 Connection Wires
+* 10 Connection Wires
 
 The python piece is written specifically for unique identifiers / serial numbers on Raspberry Pi, so that could possibly be included on this list but the circuit itself will run on any connected computer with the Arduino IDE
 

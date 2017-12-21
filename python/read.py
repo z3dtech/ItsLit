@@ -10,6 +10,7 @@ from StoPy import StoPy
 arduino_alarms = {} # global list of alarms and their active status 
 secret = json.loads( open( './secret.json', 'r' ).read() )
 sto = StoPy.StoPy( secret['url'], secret['port'], secret['api_key'] ) # API wrapepr object
+reads_per_calibration = 40
 
 def getPiId(): # this function generates an ID for the Pi MCU
 	cpuserial = "0000000000000000"
@@ -45,26 +46,26 @@ def parseInput( arduino ): # this function interfaces with an individual arduino
 	port = arduino['port']
 	try:
 		ser = serial.Serial( port, listen, timeout=15 ) #open
-		while i < 40: #10 reads per calibration
+		while i < reads_per_calibration: 
 			try: 
 				lines = ser.read(255).split("\n") #read data
 				upload['data'] = json.loads( lines[len(lines)-2] ) #parse data
 				upload['data']['time'] = int(time()) #addd time
 				print( upload ) #check format
-				#print( sto.insert(upload['collection'], upload['owner'], upload['data']) ) #save/upload data
-				#alarm_data = dict( JSON.dump( upload['data'] ) )
+				print( sto.insert(upload['collection'], upload['owner'], upload['data']) ) #save/upload data
 
-				# send our data up to fog triggers
+				# if an alarm is triggered by a sensor, set off alarms for all other connected sensors -->
+				# fog fog fog
 				if int( upload['data']['alarm'] ) > 0:
 					arduino_alarms[ arduino['arduino_id'] ] = True
 				else:
 					arduino_alarms[ arduino['arduino_id'] ] = False
 				
-				#print( 'Alarm Level ' + alarm_data['alarm'] )
+				#print( 'Alarm Level ' + str( alarm_data['alarm'] ) )
 				print( arduino_alarms )
 				#handle external fog triggers
 				if arduino_alarms[ arduino['arduino_id'] ] == False and any( active == True for active in arduino_alarms.values() ):
-					ser.write("REMOTE ALARM TRIGGER")
+					ser.write("REMOTE ALARM TRIGGER") # this sets of the alarm
 				i += 1 #iterate count
 			except ValueError:  # includes simplejson.decoder.JSONDecodeError
 				print 'Decoding JSON has failed'
