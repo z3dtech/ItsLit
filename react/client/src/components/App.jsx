@@ -9,6 +9,7 @@ import {
 //import NavLeft from 'framework7-react'
 
 import {routes} from '../routes';
+import SensorList from './SensorList'
 
 const LeftPanel = (props, context) => (
 	<Panel left reveal layout="dark">
@@ -61,14 +62,10 @@ const MainViews = (props, context) => {
 					</NavRight>
 				</Navbar>
 				
-				{/* Pages */}
+				{/* Sensors */}
 				<Pages>
-					<Page>					
-						<List>
-							<ListItem link="sensor/302328sdak23/" title="Living Room"></ListItem>
-							<ListItem link="sensor/932934adsf32/" title="Kitchen"></ListItem>							
-							<ListItem link="about" title="Bathroom"></ListItem>							
-						</List>
+					<Page>
+						<SensorList />
 					</Page>
 				</Pages>
 			</View>
@@ -80,11 +77,15 @@ MainViews.contextTypes = {
 	framework7AppContext: PropTypes.object
 };
 
-
 const onChangeHandler = (event, value) => {
 	this.setState({ ...this.state, value: event.target.value})
 };
 
+const signInClick = (event, value) => {
+	console.log( "validate + setstate" )
+	//this.setState({...this.state, 'signedIn': this.state.subscriber})
+	//console.log( this.state )
+}
 
 const AppLoginScreen = ( props ) => (
 	<LoginScreen id="login-screen">
@@ -105,13 +106,14 @@ const AppLoginScreen = ( props ) => (
 						</ListItem>
 					</List>
 					<List>
-						<ListButton title="Sign In" closeLoginScreen />
+						<ListButton title="Sign In" onClick={signInClick} closeLoginScreen />
 					</List>
 				</Page>
 			</Pages>
 		</View>
 	</LoginScreen>
 );
+
 
 let currentRoute;
 
