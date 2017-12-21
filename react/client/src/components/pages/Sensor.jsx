@@ -29,9 +29,6 @@ export class Sensor extends React.Component {
                     }).catch((error) => {
                         console.error(error);
                     })
-           
-
-
     }    
     render( ) {
          let route = getCurrentRoute()
@@ -69,3 +66,4 @@ export class Sensor extends React.Component {
         }
     }
 };
+cd 

@@ -7,10 +7,12 @@ from time import sleep
 from time import time
 from StoPy import StoPy
 
-arduino_alarms = {} # global list of alarms and their active status 
 secret = json.loads( open( './secret.json', 'r' ).read() )
 sto = StoPy.StoPy( secret['url'], secret['port'], secret['api_key'] ) # API wrapepr object
 reads_per_calibration = 40
+manager = multiprocessing.Manager()
+arduino_alarms = manager.dict() # global list of alarms and their active status
+
 
 def getPiId(): # this function generates an ID for the Pi MCU
 	cpuserial = "0000000000000000"
@@ -25,7 +27,7 @@ def getPiId(): # this function generates an ID for the Pi MCU
 	return "MCU-" + cpuserial
 
 
-def getArduinoPorts(): # this function scans all USB ports for arduino connections and stores them
+def getArduinoPorts( arduino_alarms ): # this function scans all USB ports for arduino connections and stores them
 	arduinos = []
 	arduino_labels = ('Arduino', 'FT231X')
 	ports = list( serial.tools.list_ports.comports() )
@@ -53,7 +55,9 @@ def parseInput( arduino ): # this function interfaces with an individual arduino
 				upload['data']['time'] = int(time()) #addd time
 				print( upload ) #check format
 				print( sto.insert(upload['collection'], upload['owner'], upload['data']) ) #save/upload data
-
+				#handle external fog triggers
+				if arduino_alarms[ arduino['arduino_id'] ] == False and any( active == True for active in arduino_alarms.values() ):
+					ser.write("REMOTE ALARM TRIGGER") # this sets of the alarm				
 				# if an alarm is triggered by a sensor, set off alarms for all other connected sensors -->
 				# fog fog fog
 				if int( upload['data']['alarm'] ) > 0:
@@ -63,9 +67,6 @@ def parseInput( arduino ): # this function interfaces with an individual arduino
 				
 				#print( 'Alarm Level ' + str( alarm_data['alarm'] ) )
 				print( arduino_alarms )
-				#handle external fog triggers
-				if arduino_alarms[ arduino['arduino_id'] ] == False and any( active == True for active in arduino_alarms.values() ):
-					ser.write("REMOTE ALARM TRIGGER") # this sets of the alarm
 				i += 1 #iterate count
 			except ValueError:  # includes simplejson.decoder.JSONDecodeError
 				print 'Decoding JSON has failed'
@@ -93,7 +94,7 @@ def parseInput( arduino ): # this function interfaces with an individual arduino
 
 except_counter = 0		
 try: # listen to each arduino
-	arduinos_list = getArduinoPorts()
+	arduinos_list = getArduinoPorts( arduino_alarms )
 	print( sto.insert( 'sensors', getPiId(), { 'sensors': arduinos_list } ) ) #save/upload data
 	p = multiprocessing.Pool(len(arduinos_list))
 	if len(arduinos_list) < 128:
