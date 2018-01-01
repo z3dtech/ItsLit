@@ -25,5 +25,5 @@ Once configured, simply running the read.py script will execute the following:
 
 The React App is divided into two parts, the backend and the client, both of which can be launched using npm start. Again, you will need to configure your secret.json for with a sto API connection and an API key that has read credentials on all relevant collections.
 
-(THIS PART ISN'T QUITE DONE YET! -- STILL DOING SOME CLEANUP AND HOPING TO INTEGRATE WEB SOCKETS)
+(THIS PART ISN'T QUITE DONE YET!)
 
